@@ -37,9 +37,10 @@ interface TypingUser {
 interface ChatInterfaceProps {
   roomId: string;
   currentUserId: string;
+  allowFileUpload?: boolean; // Default true, set false for text-only chats
 }
 
-const ChatInterface = ({ roomId, currentUserId }: ChatInterfaceProps) => {
+const ChatInterface = ({ roomId, currentUserId, allowFileUpload = true }: ChatInterfaceProps) => {
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
@@ -373,7 +374,7 @@ const ChatInterface = ({ roomId, currentUserId }: ChatInterfaceProps) => {
       </div>
 
       <div className="border-t p-4">
-        {file && (
+        {allowFileUpload && file && (
           <div className="mb-2 text-sm text-muted-foreground">
             Selected: {file.name}
             <Button
@@ -387,20 +388,24 @@ const ChatInterface = ({ roomId, currentUserId }: ChatInterfaceProps) => {
           </div>
         )}
         <div className="flex gap-2">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/jpeg,image/png,image/gif,image/webp,application/pdf"
-            className="hidden"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-          />
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Paperclip className="h-4 w-4" />
-          </Button>
+          {allowFileUpload && (
+            <>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/gif,image/webp,application/pdf"
+                className="hidden"
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+              />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Paperclip className="h-4 w-4" />
+              </Button>
+            </>
+          )}
           <Input
             value={newMessage}
             onChange={(e) => {

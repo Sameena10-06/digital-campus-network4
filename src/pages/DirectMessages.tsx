@@ -48,7 +48,7 @@ const DirectMessages = () => {
   }, [navigate, searchParams]);
 
   const loadChatRooms = async (userId: string) => {
-    // Get all chat rooms where user is a participant and room type is 'direct'
+    // Get all chat rooms where user is a participant and room type is 'direct' ONLY
     const { data: participantData, error } = await supabase
       .from('chat_participants')
       .select(`
@@ -70,20 +70,24 @@ const DirectMessages = () => {
       const rooms: ChatRoom[] = [];
       
       for (const participant of participantData) {
-        // Get the other participant in this room
-        const { data: otherParticipants } = await supabase
-          .from('chat_participants')
-          .select('user_id, profiles:user_id(id, full_name, department, avatar_url)')
-          .eq('chat_room_id', participant.chat_room_id)
-          .neq('user_id', userId);
+        const room = participant.chat_rooms as any;
+        // ONLY include 'direct' type rooms (connected students)
+        if (room.type === 'direct') {
+          // Get the other participant in this room
+          const { data: otherParticipants } = await supabase
+            .from('chat_participants')
+            .select('user_id, profiles:user_id(id, full_name, department, avatar_url)')
+            .eq('chat_room_id', participant.chat_room_id)
+            .neq('user_id', userId);
 
-        if (otherParticipants && otherParticipants.length > 0) {
-          const otherUser = otherParticipants[0].profiles;
-          if (otherUser) {
-            rooms.push({
-              id: participant.chat_room_id,
-              otherUser: otherUser as any
-            });
+          if (otherParticipants && otherParticipants.length > 0) {
+            const otherUser = otherParticipants[0].profiles;
+            if (otherUser) {
+              rooms.push({
+                id: participant.chat_room_id,
+                otherUser: otherUser as any
+              });
+            }
           }
         }
       }
@@ -117,8 +121,8 @@ const DirectMessages = () => {
           {/* Chat list */}
           <Card className="md:col-span-1">
             <CardHeader>
-              <CardTitle>Messages</CardTitle>
-              <CardDescription>Your direct conversations</CardDescription>
+              <CardTitle>Connected Chats</CardTitle>
+              <CardDescription>Private chats with connected students only</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
               {chatRooms.length === 0 ? (

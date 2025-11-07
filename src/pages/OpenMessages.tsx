@@ -256,7 +256,7 @@ const OpenMessages = () => {
 
           <Card className="md:col-span-2">
             {selectedRoom && currentUserId ? (
-              <ChatInterface roomId={selectedRoom} currentUserId={currentUserId} />
+              <ChatInterface roomId={selectedRoom} currentUserId={currentUserId} allowFileUpload={false} />
             ) : (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center">
