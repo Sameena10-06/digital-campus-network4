@@ -279,11 +279,20 @@ const ChatInterface = ({ roomId, currentUserId, allowFileUpload = true }: ChatIn
         return;
       }
 
-      const { data: { publicUrl } } = supabase.storage
+      const { data: signedUrlData, error: urlError } = await supabase.storage
         .from('chat-attachments')
-        .getPublicUrl(filePath);
+        .createSignedUrl(filePath, 3600); // 1 hour expiration
 
-      fileUrl = publicUrl;
+      if (urlError || !signedUrlData?.signedUrl) {
+        toast({
+          title: "Failed to generate file URL",
+          description: urlError?.message || "Unknown error",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      fileUrl = signedUrlData.signedUrl;
     }
 
     console.log('About to insert message', { roomId, currentUserId, content: newMessage, fileUrl });
