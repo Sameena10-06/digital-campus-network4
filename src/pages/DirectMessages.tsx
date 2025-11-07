@@ -4,8 +4,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { GraduationCap, ArrowLeft, MessageSquare } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 import ChatInterface from "@/components/ChatInterface";
 
 interface ChatRoom {
@@ -16,6 +18,12 @@ interface ChatRoom {
     department: string;
     avatar_url: string;
   };
+  lastMessage?: {
+    content: string;
+    created_at: string;
+    sender_id: string;
+  };
+  unreadCount: number;
 }
 
 const DirectMessages = () => {
@@ -71,7 +79,7 @@ const DirectMessages = () => {
       
       for (const participant of participantData) {
         const room = participant.chat_rooms as any;
-        // ONLY include 'direct' type rooms (connected students)
+        // ONLY include 'direct' type rooms (all direct messages)
         if (room.type === 'direct') {
           // Get the other participant in this room
           const { data: otherParticipants } = await supabase
@@ -82,15 +90,44 @@ const DirectMessages = () => {
 
           if (otherParticipants && otherParticipants.length > 0) {
             const otherUser = otherParticipants[0].profiles;
+            
             if (otherUser) {
+              // Get the latest message for this room
+              const { data: lastMessageData } = await supabase
+                .from('messages')
+                .select('content, created_at, sender_id')
+                .eq('chat_room_id', participant.chat_room_id)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .single();
+
+              // Count unread messages
+              const { data: unreadData } = await supabase
+                .from('messages')
+                .select('id', { count: 'exact', head: true })
+                .eq('chat_room_id', participant.chat_room_id)
+                .neq('sender_id', userId)
+                .not('id', 'in', `(
+                  SELECT message_id FROM message_reads WHERE user_id = '${userId}'
+                )`);
+
               rooms.push({
                 id: participant.chat_room_id,
-                otherUser: otherUser as any
+                otherUser: otherUser as any,
+                lastMessage: lastMessageData || undefined,
+                unreadCount: unreadData?.length || 0
               });
             }
           }
         }
       }
+      
+      // Sort by latest message
+      rooms.sort((a, b) => {
+        if (!a.lastMessage) return 1;
+        if (!b.lastMessage) return -1;
+        return new Date(b.lastMessage.created_at).getTime() - new Date(a.lastMessage.created_at).getTime();
+      });
       
       setChatRooms(rooms);
     }
@@ -121,8 +158,8 @@ const DirectMessages = () => {
           {/* Chat list */}
           <Card className="md:col-span-1">
             <CardHeader>
-              <CardTitle>Connected Chats</CardTitle>
-              <CardDescription>Private chats with connected students only</CardDescription>
+              <CardTitle>Direct Messages</CardTitle>
+              <CardDescription>Private conversations with students</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
               {chatRooms.length === 0 ? (
@@ -145,16 +182,36 @@ const DirectMessages = () => {
                         selectedRoom === room.id ? 'border-primary bg-muted/50' : 'border-transparent'
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <Avatar>
+                      <div className="flex items-start gap-3">
+                        <Avatar className="mt-1">
                           <AvatarImage src={room.otherUser.avatar_url} />
                           <AvatarFallback>{room.otherUser.full_name[0]}</AvatarFallback>
                         </Avatar>
-                        <div>
-                          <h3 className="font-semibold">{room.otherUser.full_name}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {room.otherUser.department}
-                          </p>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-semibold truncate">{room.otherUser.full_name}</h3>
+                              <p className="text-xs text-muted-foreground truncate">
+                                {room.otherUser.department}
+                              </p>
+                            </div>
+                            {room.unreadCount > 0 && (
+                              <Badge variant="default" className="shrink-0">
+                                {room.unreadCount}
+                              </Badge>
+                            )}
+                          </div>
+                          {room.lastMessage && (
+                            <div className="mt-1">
+                              <p className="text-sm text-muted-foreground truncate">
+                                {room.lastMessage.sender_id === currentUserId ? 'You: ' : ''}
+                                {room.lastMessage.content}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-0.5">
+                                {formatDistanceToNow(new Date(room.lastMessage.created_at), { addSuffix: true })}
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
