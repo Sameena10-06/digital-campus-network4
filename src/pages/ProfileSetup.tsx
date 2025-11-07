@@ -209,7 +209,14 @@ const ProfileSetup = () => {
 
       // Upload avatar if a new file is selected
       if (avatarFile && userId) {
-        const fileExt = avatarFile.name.split('.').pop();
+        // Map MIME types to safe extensions
+        const MIME_TO_EXT: Record<string, string> = {
+          'image/jpeg': 'jpg',
+          'image/png': 'png',
+          'image/gif': 'gif',
+          'image/webp': 'webp'
+        };
+        const fileExt = MIME_TO_EXT[avatarFile.type] || 'jpg';
         const filePath = `${userId}/avatar.${fileExt}`;
 
         const { error: uploadError } = await supabase.storage

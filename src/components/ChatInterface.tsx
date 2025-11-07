@@ -262,7 +262,15 @@ const ChatInterface = ({ roomId, currentUserId, allowFileUpload = true }: ChatIn
     let fileUrl = null;
 
     if (file) {
-      const fileExt = file.name.split('.').pop();
+      // Map MIME types to safe extensions
+      const MIME_TO_EXT: Record<string, string> = {
+        'image/jpeg': 'jpg',
+        'image/png': 'png',
+        'image/gif': 'gif',
+        'image/webp': 'webp',
+        'application/pdf': 'pdf'
+      };
+      const fileExt = MIME_TO_EXT[file.type] || 'bin';
       const fileName = `${Math.random()}.${fileExt}`;
       const filePath = `${currentUserId}/${fileName}`;
 
