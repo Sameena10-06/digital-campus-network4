@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { GraduationCap, Search, UserPlus, ArrowLeft } from "lucide-react";
+import { GraduationCap, Search, UserPlus, ArrowLeft, MessageSquare } from "lucide-react";
 
 interface Profile {
   id: string;
@@ -131,6 +131,69 @@ const Profiles = () => {
     }
   };
 
+  const handleMessage = async (profileId: string) => {
+    if (!currentUserId) return;
+
+    // Find existing direct chat room with this user
+    const { data: chatRooms } = await supabase
+      .from('chat_participants')
+      .select('chat_room_id, chat_rooms!inner(type)')
+      .eq('user_id', currentUserId);
+
+    if (chatRooms) {
+      for (const room of chatRooms) {
+        const { data: participants } = await supabase
+          .from('chat_participants')
+          .select('user_id')
+          .eq('chat_room_id', room.chat_room_id);
+
+        if (participants && participants.length === 2 && 
+            participants.some(p => p.user_id === profileId)) {
+          navigate(`/direct-messages?room=${room.chat_room_id}`);
+          return;
+        }
+      }
+    }
+
+    // If no existing chat room found, create a new one
+    const { data: newRoom, error: roomError } = await supabase
+      .from('chat_rooms')
+      .insert({
+        type: 'direct',
+        created_by: currentUserId
+      })
+      .select()
+      .single();
+
+    if (roomError || !newRoom) {
+      toast({
+        title: "Error",
+        description: "Failed to create chat room",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Add both users as participants
+    const { error: participantsError } = await supabase
+      .from('chat_participants')
+      .insert([
+        { chat_room_id: newRoom.id, user_id: currentUserId },
+        { chat_room_id: newRoom.id, user_id: profileId }
+      ]);
+
+    if (participantsError) {
+      toast({
+        title: "Error",
+        description: "Failed to add participants",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    navigate(`/direct-messages?room=${newRoom.id}`);
+  };
+
   return (
     <div className="min-h-screen bg-muted/30">
       <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -216,31 +279,33 @@ const Profiles = () => {
                     </div>
                   )}
 
-                  {profile.connectionStatus === 'accepted' ? (
-                    <div className="space-y-2">
+                  <div className="space-y-2">
+                    {profile.connectionStatus === 'accepted' ? (
                       <Badge variant="default" className="w-full justify-center">
                         Connected
                       </Badge>
+                    ) : profile.connectionStatus === 'pending' ? (
+                      <Badge variant="outline" className="w-full justify-center">
+                        Request Pending
+                      </Badge>
+                    ) : (
                       <Button 
                         className="w-full" 
-                        onClick={() => navigate('/direct-messages')}
+                        onClick={() => handleConnect(profile.id)}
                       >
-                        Message
+                        <UserPlus className="h-4 w-4 mr-2" />
+                        Connect
                       </Button>
-                    </div>
-                  ) : profile.connectionStatus === 'pending' ? (
-                    <Button className="w-full" disabled>
-                      Request Pending
-                    </Button>
-                  ) : (
+                    )}
                     <Button 
+                      variant="outline"
                       className="w-full" 
-                      onClick={() => handleConnect(profile.id)}
+                      onClick={() => handleMessage(profile.id)}
                     >
-                      <UserPlus className="h-4 w-4 mr-2" />
-                      Connect
+                      <MessageSquare className="h-4 w-4 mr-2" />
+                      Message
                     </Button>
-                  )}
+                  </div>
                 </CardContent>
               </Card>
             ))}
