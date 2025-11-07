@@ -112,12 +112,6 @@ const Dashboard = () => {
                   )}
                 </Button>
               </Link>
-              <Link to="/open-messages">
-                <Button variant="ghost" size="sm">
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  Open Messages
-                </Button>
-              </Link>
               <Link to="/campus-chat">
                 <Button variant="ghost" size="sm">
                   <MessageSquare className="h-4 w-4 mr-2" />
@@ -212,12 +206,6 @@ const Dashboard = () => {
                   <Button variant="outline" className="w-full justify-start">
                     <Users className="h-4 w-4 mr-2" />
                     Browse Students
-                  </Button>
-                </Link>
-                <Link to="/open-messages">
-                  <Button variant="outline" className="w-full justify-start">
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    Message Any Student
                   </Button>
                 </Link>
                 <Link to="/campus-chat">

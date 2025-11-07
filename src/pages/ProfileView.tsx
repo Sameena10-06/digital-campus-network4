@@ -121,11 +121,43 @@ const ProfileView = () => {
       }
     }
 
-    toast({
-      title: "Error",
-      description: "No chat room found",
-      variant: "destructive",
-    });
+    // If no existing chat room found, create a new one
+    const { data: newRoom, error: roomError } = await supabase
+      .from('chat_rooms')
+      .insert({
+        type: 'direct',
+        created_by: currentUserId
+      })
+      .select()
+      .single();
+
+    if (roomError || !newRoom) {
+      toast({
+        title: "Error",
+        description: "Failed to create chat room",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Add both users as participants
+    const { error: participantsError } = await supabase
+      .from('chat_participants')
+      .insert([
+        { chat_room_id: newRoom.id, user_id: currentUserId },
+        { chat_room_id: newRoom.id, user_id: id }
+      ]);
+
+    if (participantsError) {
+      toast({
+        title: "Error",
+        description: "Failed to add participants",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    navigate(`/direct-messages?room=${newRoom.id}`);
   };
 
   if (!profile) {
@@ -164,22 +196,24 @@ const ProfileView = () => {
                 <CardTitle className="text-3xl mb-2">{profile.full_name}</CardTitle>
                 <p className="text-muted-foreground mb-4">{profile.department}</p>
                 <div className="flex gap-2">
-                  {connectionStatus === 'accepted' ? (
+                  {currentUserId !== id && (
                     <>
-                      <Badge variant="secondary">Connected</Badge>
+                      {connectionStatus === 'accepted' ? (
+                        <Badge variant="secondary">Connected</Badge>
+                      ) : connectionStatus === 'pending' ? (
+                        <Badge variant="outline">Request Pending</Badge>
+                      ) : (
+                        <Button size="sm" onClick={handleConnect}>
+                          <Heart className="h-4 w-4 mr-2" />
+                          Connect
+                        </Button>
+                      )}
                       <Button size="sm" onClick={handleMessage}>
                         <MessageSquare className="h-4 w-4 mr-2" />
                         Message
                       </Button>
                     </>
-                  ) : connectionStatus === 'pending' ? (
-                    <Badge variant="outline">Request Pending</Badge>
-                  ) : currentUserId !== id ? (
-                    <Button size="sm" onClick={handleConnect}>
-                      <Heart className="h-4 w-4 mr-2" />
-                      Connect
-                    </Button>
-                  ) : null}
+                  )}
                 </div>
               </div>
             </div>

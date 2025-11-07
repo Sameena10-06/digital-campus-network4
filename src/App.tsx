@@ -11,7 +11,6 @@ import Profiles from "./pages/Profiles";
 import Connections from "./pages/Connections";
 import CampusChat from "./pages/CampusChat";
 import DirectMessages from "./pages/DirectMessages";
-import OpenMessages from "./pages/OpenMessages";
 import ProfileView from "./pages/ProfileView";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
@@ -32,7 +31,6 @@ const App = () => (
           <Route path="/profiles" element={<Profiles />} />
           <Route path="/connections" element={<Connections />} />
           <Route path="/campus-chat" element={<CampusChat />} />
-          <Route path="/open-messages" element={<OpenMessages />} />
           <Route path="/direct-messages" element={<DirectMessages />} />
           <Route path="/profile/:id" element={<ProfileView />} />
           <Route path="/about" element={<About />} />
