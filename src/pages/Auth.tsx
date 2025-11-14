@@ -9,6 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { GraduationCap } from "lucide-react";
 import { z } from "zod";
+import Logo from "@/assets/logo.JPG";
+
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address").max(255, "Email must be less than 255 characters"),
@@ -136,7 +138,7 @@ const Auth = () => {
       <div className="w-full max-w-md space-y-6">
         <div className="text-center space-y-2">
           <Link to="/" className="inline-flex items-center gap-2">
-            <GraduationCap className="h-10 w-10 text-primary" />
+            <img src={Logo} alt="DCN Logo" className="h-10 w-10 rounded-full object-cover"/>
           </Link>
           <h1 className="text-3xl font-bold">Digital Campus Network</h1>
           <p className="text-muted-foreground">Join your campus community</p>

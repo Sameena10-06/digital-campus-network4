@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { GraduationCap, ArrowLeft, Check, X, MessageSquare } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import logo from "@/assets/logo.JPG";
 
 interface ConnectionRequest {
   id: string;

@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { GraduationCap, ArrowLeft, MessageSquare, Award, Briefcase, Heart } from "lucide-react";
+import Logo from "@/assets/logo.JPG";
 
 interface Profile {
   id: string;
@@ -170,7 +171,7 @@ const ProfileView = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link to="/dashboard" className="flex items-center gap-2">
-              <GraduationCap className="h-8 w-8 text-primary" />
+             <img src={Logo} alt="DCN Logo" className="h-10 w-10 rounded-full object-cover"/>
               <span className="text-xl font-bold">Digital Campus Network</span>
             </Link>
             
