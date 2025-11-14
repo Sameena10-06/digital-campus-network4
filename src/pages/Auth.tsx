@@ -7,9 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { GraduationCap } from "lucide-react";
 import { z } from "zod";
-import Logo from "@/assets/logo.JPG";
+import Logo from "@/assets/logo.jpg";
 
 
 const loginSchema = z.object({

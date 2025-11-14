@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { GraduationCap, ArrowLeft, MessageSquare, Award, Briefcase, Heart } from "lucide-react";
-import Logo from "@/assets/logo.JPG";
+import Logo from "@/assets/logo.jpg";
 
 interface Profile {
   id: string;

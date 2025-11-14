@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, Target, Users, Heart } from "lucide-react";
-import Logo from "@/assets/logo.JPG";
+import Logo from "@/assets/logo.jpg";
 
 const About = () => {
   return (

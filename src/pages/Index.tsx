@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, Users, MessageSquare, Network } from "lucide-react";
 import heroImage from "@/assets/campus-hero.jpg";
-import Logo from "@/assets/logo.JPG";
+import Logo from "@/assets/logo.jpg";
 
 
 const Index = () => {

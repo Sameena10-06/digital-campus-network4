@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { GraduationCap, ArrowLeft } from "lucide-react";
 import ChatInterface from "@/components/ChatInterface";
-import Logo from "@/assets/logo.JPG";
+import Logo from "@/assets/logo.jpg";
 
 const CampusChat = () => {
   const navigate = useNavigate();
