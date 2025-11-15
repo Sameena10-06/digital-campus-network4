@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { GraduationCap, ArrowLeft, Check, X, MessageSquare } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Logo from "@/assets/logo.jpg";
 
 interface ConnectionRequest {
   id: string;
@@ -171,7 +170,7 @@ const Connections = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link to="/dashboard" className="flex items-center gap-2">
-              <img src={Logo} alt="DCN Logo" className="h-10 w-10 rounded-full object-cover" />
+              <GraduationCap className="h-8 w-8 text-primary" />
               <span className="text-xl font-bold">Digital Campus Network</span>
             </Link>
             
