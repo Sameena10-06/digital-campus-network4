@@ -11,7 +11,7 @@ const About = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2">
-              <img src={Logo} alt="DCN Logo" className="h-10 w-10 rounded-lg object-cover" />
+              <img src={Logo} alt="DCN Logo" className="h-10 w-10 rounded-full object-cover" />
               <span className="text-xl font-bold">Digital Campus Network</span>
             </Link>
             

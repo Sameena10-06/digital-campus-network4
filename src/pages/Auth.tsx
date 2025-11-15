@@ -138,7 +138,7 @@ const Auth = () => {
       <div className="w-full max-w-md space-y-6">
         <div className="text-center space-y-2">
           <Link to="/" className="inline-flex items-center gap-2">
-            <img src={Logo} alt="DCN Logo" className="h-12 w-12 rounded-lg object-cover" />
+            <img src={Logo} alt="DCN Logo" className="h-10 w-10 rounded-full object-cover" />
           </Link>
           <h1 className="text-3xl font-bold">Digital Campus Network</h1>
           <p className="text-muted-foreground">Join your campus community</p>
