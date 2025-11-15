@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, Users, MessageSquare, Network } from "lucide-react";
 import heroImage from "@/assets/campus-hero.jpg";
-import Logo from "@/assets/logo.jpg";
 
 
 const Index = () => {
@@ -13,7 +12,7 @@ const Index = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2">
-              <img src={Logo} alt="DCN Logo" className="h-10 w-10 rounded-full object-cover"/>
+              <GraduationCap className="h-8 w-8 text-primary" />
               <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Digital Campus Network
               </span>

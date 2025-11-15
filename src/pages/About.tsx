@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, Target, Users, Heart } from "lucide-react";
-import Logo from "@/assets/logo.jpg";
 
 const About = () => {
   return (
@@ -11,7 +10,7 @@ const About = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2">
-              <img src={Logo} alt="DCN Logo" className="h-10 w-10 rounded-full object-cover"/>
+              <GraduationCap className="h-8 w-8 text-primary" />
               <span className="text-xl font-bold">Digital Campus Network</span>
             </Link>
             

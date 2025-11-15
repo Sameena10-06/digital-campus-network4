@@ -7,8 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { GraduationCap } from "lucide-react";
 import { z } from "zod";
-import Logo from "@/assets/logo.jpg";
 
 
 const loginSchema = z.object({
@@ -137,7 +137,7 @@ const Auth = () => {
       <div className="w-full max-w-md space-y-6">
         <div className="text-center space-y-2">
           <Link to="/" className="inline-flex items-center gap-2">
-            <img src={Logo} alt="DCN Logo" className="h-10 w-10 rounded-full object-cover"/>
+            <GraduationCap className="h-10 w-10 text-primary" />
           </Link>
           <h1 className="text-3xl font-bold">Digital Campus Network</h1>
           <p className="text-muted-foreground">Join your campus community</p>
