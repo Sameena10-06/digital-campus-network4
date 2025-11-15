@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Search, UserPlus, ArrowLeft, MessageSquare, GraduationCap } from "lucide-react";
+import Logo from "@/assets/logo.jpg";
 
 interface Profile {
   id: string;
@@ -200,7 +201,7 @@ const Profiles = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link to="/dashboard" className="flex items-center gap-2">
-              <GraduationCap className="h-8 w-8 text-primary" />
+              <img src={Logo} alt="DCN Logo" className="h-10 w-10 rounded-lg object-cover" />
               <span className="text-xl font-bold">Digital Campus Network</span>
             </Link>
             
