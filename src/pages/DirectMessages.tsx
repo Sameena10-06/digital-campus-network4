@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { GraduationCap, ArrowLeft, MessageSquare } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import ChatInterface from "@/components/ChatInterface";
+import Logo from "@/assets/logo.jpg";
 
 interface ChatRoom {
   id: string;
@@ -139,7 +140,7 @@ const DirectMessages = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link to="/dashboard" className="flex items-center gap-2">
-              <GraduationCap className="h-8 w-8 text-primary" />
+              <img src={Logo} alt="DCN Logo" className="h-10 w-10 rounded-lg object-cover" />
               <span className="text-xl font-bold">Digital Campus Network</span>
             </Link>
             
